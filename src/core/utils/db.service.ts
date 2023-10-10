@@ -24,7 +24,7 @@ export class DbService {
         break;
       default:
         dbPool = new pg.Pool(config.dbConfig.localhost);
-        console.log(`[SERVER]: Database connected to remote db`);
+        console.log(`[SERVER]: Database connected to localhost db`);
         break;
     }
   }

@@ -1,7 +1,7 @@
 {
-  "name": "node-typescript-boilerplate",
+  "name": "landing-page-generator",
   "version": "0.0.0",
-  "description": "Minimalistic boilerplate to quick-start Node.js development in TypeScript.",
+  "description": "",
   "type": "module",
   "engines": {
     "node": ">= 18.12 <19"
@@ -22,7 +22,12 @@
     "typescript": "~5.1"
   },
   "scripts": {
-    "start": "node build/src/app.js",
+    "start": "node build/src/app.js --mode dev --db localhost",
+
+    "dev": "nodemon src/app.ts --mode dev",
+    "dev-remote-db": "nodemon src/app.ts --mode dev --db remote",
+    "dev-local-db": "nodemon src/app.ts --mode dev --db local",
+
     "clean": "rimraf coverage build tmp",
     "prebuild": "npm run lint",
     "build": "tsc -p tsconfig.json",
@@ -33,16 +38,20 @@
     "prettier": "prettier --config .prettierrc --write .",
     "test:watch": "jest --watch"
   },
-  "author": "Jakub Synowiec <jsynowiec@users.noreply.github.com>",
+  "author": "",
   "license": "Apache-2.0",
   "dependencies": {
+    "@types/handlebars": "^4.1.0",
     "@types/pg": "^8.10.4",
     "aws-sdk": "^2.1472.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "handlebars": "^4.7.8",
     "joi": "^17.11.0",
+    "nodemon": "^3.0.1",
     "optimist": "^0.6.1",
     "pg": "^8.11.3",
+    "ts-node": "^10.9.1",
     "tslib": "~2.6"
   },
   "volta": {

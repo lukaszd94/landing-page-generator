@@ -1,12 +1,18 @@
 import express, {Application, Request, Response, NextFunction, Router} from 'express';
 import optimist from 'optimist';
 import cors from 'cors';
+import path from 'path';
 import http, {Server} from 'http';
 import {registerRoutes} from './routes.js';
 import { DbService } from './core/utils/db.service.js';
 import { config } from './core/config/config.js';
-process.env.AWS_ACCESS_KEY_ID = config.aws.key;
-process.env.AWS_SECRET_ACCESS_KEY = config.aws.secretKey;
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+// process.env.AWS_ACCESS_KEY_ID = config.aws.key;
+// process.env.AWS_SECRET_ACCESS_KEY = config.aws.secretKey;
 
 const router = Router();
 const appArguments = optimist.argv;
@@ -41,10 +47,12 @@ function configureCors(): void {
 function configureExpress(serverMode: string): void {
   switch (serverMode) {
     case 'dev':
+      app.use(express.static(__dirname.replace('build\\src', 'frontend')));
+      app.use(express.static(__dirname.replace('build\\src', 'generated')));
       console.log(`[SERVER]: Development enabled. Server running on port ${port}`);
       break;
     case 'prod':
-      app.use(express.static(__dirname.replace('dist', '') + '/app-client'));
+      //app.use(express.static(__dirname.replace('dist', '') + '/app-client'));
       console.log(`[SERVER]: Development enabled. Server running on port ${port}`);
       break;
     default:
@@ -54,6 +62,15 @@ function configureExpress(serverMode: string): void {
 }
 
 function configureRouter(): void {
+
+  app.get('/app', function(req, res) {
+    res.sendFile(path.join(__dirname.replace('build\\src', 'frontend'), '/index.html'));
+  });
+
+  app.get('/generated', function(req, res) {
+    res.sendFile(path.join(__dirname.replace('build\\src', 'generated'), '/generated-page.html'));
+  });
+
   app.use(`/api`, router);
   router.use(express.json({limit: '50mb'}));
   router.use(express.urlencoded({extended: true}));

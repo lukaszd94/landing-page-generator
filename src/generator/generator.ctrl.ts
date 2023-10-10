@@ -4,11 +4,15 @@ import { Request, Response } from "express";
 import { DEFINED_ERRORS } from "../core/utils/definedErrors.js";
 
 export class GeneratorController {
+
   constructor() {}
 
-  static async generatePage(_req: Request, res: Response) {
+  static async generatePage(req: Request, res: Response) {
     try {
-      await GeneratorRepository.generatePage();
+
+      const body = req.body;
+
+      await GeneratorRepository.generatePage(body);
 
       HttpClientHelper.send<string>(res, {
         payload: "ok",
