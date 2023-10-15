@@ -63,11 +63,11 @@ function configureExpress(serverMode: string): void {
 
 function configureRouter(): void {
 
-  app.get('/app', function(req, res) {
+  app.get('/app', function(_req, res) {
     res.sendFile(path.join(__dirname.replace('build\\src', 'frontend'), '/index.html'));
   });
 
-  app.get('/generated', function(req, res) {
+  app.get('/generated', function(_req, res) {
     res.sendFile(path.join(__dirname.replace('build\\src', 'generated'), '/generated-page.html'));
   });
 

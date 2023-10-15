@@ -1,0 +1,30 @@
+<header class="header header--desktop">
+  <div class="container header__container header__container--desktop">
+    <nav class="header__nav">
+      <ul class="nav-menu">
+        {{#each menu.leftNav}}
+        <li>
+          <a href="{{this.url}}" title="{{this.title}}"
+            class="nav-menu__item nav-menu__item--{{this.type}}">{{this.text}}</a>
+        </li>
+        {{/each}}
+      </ul>
+
+      <div class="nav-menu__logo">
+        <a href="">
+          <img width="140" height="140" src="./content/logo-apteczka-finansowa.svg" alt="Logo Apteczka Finansowa">
+        </a>
+      </div>
+
+      <ul class="nav-menu nav-menu--right">
+        {{#each menu.rightNav}}
+        <li>
+          <a href="{{this.url}}" title="{{this.title}}"
+            class="nav-menu__item nav-menu__item--{{this.type}}">{{this.text}}</a>
+        </li>
+        {{/each}}
+      </ul>
+
+    </nav>
+  </div>
+</header>

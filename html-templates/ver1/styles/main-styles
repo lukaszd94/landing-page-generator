@@ -1,8 +1,0 @@
-body {
-  background: {{body.background}};
-  color: white;
-}
-
-.page-wraper {
-
-}
