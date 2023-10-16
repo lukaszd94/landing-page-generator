@@ -34,6 +34,9 @@ export class GeneratorRepository {
       const footerDesktopFile = readFileSync(`html-templates/${version}/components/footer/footer.desktop.html`, 'utf-8');
       const footerDesktopTemplate = Handlebars.compile(footerDesktopFile);
 
+      const sectionMainFile = readFileSync(`html-templates/${version}/components/sections/section.main.html`, 'utf-8');
+      const sectionMainTemplate = Handlebars.compile(sectionMainFile);
+
       const componentsData = {
         header: {
           title: 'Generated Page LPG',
@@ -62,15 +65,18 @@ export class GeneratorRepository {
             }]
           }
         },
+        sections: {
+          main: {
+
+          }
+        },
         footer: {
         }
       }
 
       const filledHeaderDesktopComponenent = headerDesktopTemplate(componentsData.header);
+      const filledSectionMainComponenent = sectionMainTemplate(componentsData.sections.main);
       const filledFooterDesktopComponenent = footerDesktopTemplate(componentsData.footer);
-
-      console.log(filledHeaderDesktopComponenent);
-      console.log(filledFooterDesktopComponenent);
 
       const generatedPage = pageTemplate({
         content: {
@@ -81,6 +87,9 @@ export class GeneratorRepository {
           header: {
             desktop: filledHeaderDesktopComponenent,
           },
+          sections: [
+            filledSectionMainComponenent
+          ],
           footer: {
             desktop: filledFooterDesktopComponenent
           }

@@ -14,15 +14,15 @@
 
 <body>
   <div class="page-wrapper">
-    <div>
-      {{{components.header.desktop}}}
-    </div>
+    {{{components.header.desktop}}}
 
+    <main>
+      {{#each components.sections}}
+      {{{this}}}
+      {{/each}}
+    </main>
 
-
-    <div>
-      {{{components.footer.desktop}}}
-    </div>
+    {{{components.footer.desktop}}}
 
   </div>
 </body>
