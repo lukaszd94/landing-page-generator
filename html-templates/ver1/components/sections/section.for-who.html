@@ -1,33 +1,26 @@
-<section class="section-main">
-  <div class="container section-main__container">
+<section class="section-for-who">
+  <div class="container section-for-who__container">
     <div class="">
-      <header class="">
-        <h1 class="">Apteczka Finansowa</h1>
+      <header class="section-for-who__header">
+        <h2 class="">Dla kogo jest Apteczka Finansowa?</h2>
         <p class="">
-          <img width="85" height="10" src="./content/arrow-long-blue.svg" alt="">
-          <span>Twoje bezpieczeństwo finansowe w jednym miejscu.</span>
+          Przekonaj się, że Apteczka Finansowa to produkt właśnie dla Ciebie!
         </p>
       </header>
 
-      <div class="info-box">
-        <img width="48" height="48" src="./content/quote-rect.svg" alt="">
-        <p>
-          Zadbaj o porządek w swojej dokumentacji finansowej, aby zapewnić sobie i swoim bliskim pewność i spokój
-          umysłu. Dzięki Apteczce Finansowej przekonasz się, jak dobra organizacja może uzdrowić Twoje finanse.
-        </p>
-      </div>
-
-      <div class="section-main__lower-btn">
-        <img width="85" height="10" src="./content/arrow-long-accent.svg" alt="">
-        <a href="#co-zyskasz" class="nav-menu__item--btn" title="Sprawdź co zyskasz">
-          Dowiedz się, jak wiele możesz zyskać!
-        </a>
-      </div>
-
+      <ul class="section-for-who__boxes">
+        {{#each boxes}}
+        <li class="section-for-who__box">
+          <article class="box">
+            <header class="box__header">
+              <img width="40" height="40" class="" src="./content/check-rect-blue.svg" alt="">
+              <h3 class="">{{this.title}}</h3>
+            </header>
+            <p>{{this.text}}</p>
+          </article>
+        </li>
+        {{/each}}
+      </ul>
     </div>
-
-    <figure class="text-center">
-      <img width="505" height="466" class="mx-auto" src="./content/apteczka-finansowa-mockup.png" alt="">
-    </figure>
   </div>
 </section>

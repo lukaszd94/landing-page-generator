@@ -1,7 +1,24 @@
 <div class="footer">
   <div class="container">
-    <div>
-      <span>Tutaj jest footer strony wygenerowanej przez LPG</span>
-    </div>
+    <nav class="footer__nav">
+      <div class="footer__logo">
+        <a href="" class="footer__logo-item">
+          <img width="117" height="117" src="./content/logo-apteczka-finansowa-footer.svg" alt="Logo Apteczka Finansowa">
+        </a>
+      </div>
+
+      <ul class="footer__menu">
+        {{#each leftNav}}
+        <li>
+          <a href="{{this.url}}" title="{{this.title}}"
+            class="footer__menu-item footer__menu-item--{{this.type}}">{{this.text}}</a>
+        </li>
+        {{/each}}
+      </ul>
+
+      <div class="footer__text">
+        <span>{{rightText}}</span>
+      </div>
+    </nav>
   </div>
 </div>

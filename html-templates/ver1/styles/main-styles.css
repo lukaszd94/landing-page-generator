@@ -50,6 +50,9 @@ body {
   padding: 10px;
   margin: 0px 10px;
 }
+.nav-menu__item--footer {
+  color: white;
+}
 .nav-menu__item--link {
   color: black;
   text-decoration: none;
@@ -88,6 +91,34 @@ body {
 .section-main__lower-btn {
   margin-top: 40px;
 }
+.section-for-who {
+  background: rgb(19, 12, 48);
+  color: white;
+  padding-bottom: 5rem;
+  padding-top: 5rem;
+}
+.section-for-who__header {
+  text-align: center;
+}
+.section-for-who__boxes {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+.section-for-who__box {
+  margin: 15px;
+  display: flex;
+  color: black;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  align-items: start;
+}
+
+.box__header {
+  text-align: center;
+  padding-bottom: 20px;
+  border-bottom: solid 1px rgb(38, 163, 221);
+}
 
 .info-box {
   margin: 15px 0px;
@@ -103,8 +134,33 @@ body {
 }
 
 .footer {
-  position: fixed;
-  bottom: 0;
+  background: rgb(19, 12, 48);
   width: 100%;
-  height: 50px;
+  height: 200px;
+  color: white;
+}
+.footer__nav {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer__menu {
+  list-style-type: none;
+  display: flex;
+}
+.footer__menu-item {
+  padding: 10px;
+  margin: 0px 10px;
+}
+.footer__menu-item--link {
+  color: white;
+  text-decoration: none;
+  transition: all 300ms;
+}
+.footer__menu-item--link:hover {
+  color: rgb(38, 163, 221);
+}
+.footer__text {
+  color: white;
 }/*# sourceMappingURL=main-styles.css.map */
