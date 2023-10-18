@@ -98,6 +98,7 @@ body {
   padding-top: 5rem;
 }
 .section-for-who__header {
+  padding-bottom: 20px;
   text-align: center;
 }
 .section-for-who__boxes {

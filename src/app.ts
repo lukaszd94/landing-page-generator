@@ -39,7 +39,7 @@ function configureCors(): void {
     next();
   });
 
-  app.use(cors());
+  app.use(cors({ origin: 'http://localhost:3000'}));
 
   app.set('trust proxy', true);
 }

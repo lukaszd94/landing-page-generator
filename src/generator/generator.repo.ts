@@ -73,6 +73,10 @@ export class GeneratorRepository {
 
           },
           forWho: {
+            header: {
+              title: 'Dla kogo jest Apteczka Finansowa?',
+              text: 'Przekonaj się, że Apteczka Finansowa to produkt właśnie dla Ciebie!'
+            },
             boxes: [{
               title: 'Dla świadomych osób, które chcą uporządkować swoją dokumentację we właściwy i przejrzysty sposób.',
               text: 'Praktycznie każdy z nas wie, że ważne dokumenty powinny być przechowywane w bezpiecznym i łatwo dostępnym miejscu. Bałagan w „papierach” to jednak odwieczny problem wielu gospodarstw domowych. Apteczka Finansowa to rozwiązanie, które pomoże Ci w uporządkowaniu kluczowych dokumentów finansowych w prosty, wygodny i skuteczny sposób.',
