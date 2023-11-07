@@ -1,23 +1,57 @@
 import { DbService } from "../core/utils/db.service.js";
-import { Component } from "./generator.model.js";
 import Handlebars from "handlebars";
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, createWriteStream, readdir } from 'fs';
+import path from 'path';
+import JSZip from "jszip";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import { PageComponent } from "./generator.model.js";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export class GeneratorRepository {
   constructor() { }
 
-  static async getPageComponents(): Promise<Component[]> {
-    const queryResult = await DbService.runQuery(
-      "SELECT * FROM components"
-    );
+  static async getPageComponentById(pageComponentId: number): Promise<PageComponent> {
+    const queryResult = await DbService.runQuery(`
+      SELECT
+        *
+      FROM
+        page_component
+      WHERE
+        id = ${pageComponentId};
+    `);
 
-    return queryResult.map((item: Component) => item);
+    return queryResult.map((item: PageComponent) => item);
+  }
+
+  static async downloadGeneratedPage(): Promise<void> {
+    const zip = new JSZip();
+
+    const directoryPath = path.join(__dirname.replace('build\\src\\generator', 'generated'));
+    readdir(directoryPath, (_err, files) => {
+      files.forEach(file => {
+        zip.file(file);
+      });
+    });
+
+    zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+      .pipe(createWriteStream('sample.zip'))
+      .on('finish', function () {
+        console.log("sample.zip written.");
+      });
+
   }
 
 
-  static async generatePage(body: { componentsIds: number[] }): Promise<void> {
-    body[0];
-
+  static async generatePage(templateData: {
+    header: object,
+    sections: {
+      main: object,
+      forWho: object
+    },
+    footer: object
+  }): Promise<void> {
     const version = 'ver1';
 
     try {
@@ -40,81 +74,7 @@ export class GeneratorRepository {
       const sectionForWhoFile = readFileSync(`html-templates/${version}/components/sections/section.for-who.html`, 'utf-8');
       const sectionForWhoTemplate = Handlebars.compile(sectionForWhoFile);
 
-      const componentsData = {
-        header: {
-          title: 'Generated Page LPG',
-          menu: {
-            leftNav: [{
-              text: 'Dlaczego warto',
-              title: 'Dlaczego warto',
-              url: 'https://test.pl',
-              type: 'link'
-            }, {
-              text: 'Co zyskasz',
-              title: 'Co zyskasz',
-              url: 'https://test.pl',
-              type: 'link'
-            }],
-            rightNav: [{
-              text: 'Dla kogo',
-              title: 'Dla kogo',
-              url: 'https://test.pl',
-              type: 'link'
-            }, {
-              text: 'Zamów Apteczkę',
-              title: 'Zamów Apteczkę',
-              url: 'https://test.pl',
-              type: 'btn'
-            }]
-          }
-        },
-        sections: {
-          main: {
-
-          },
-          forWho: {
-            header: {
-              title: 'Dla kogo jest Apteczka Finansowa?',
-              text: 'Przekonaj się, że Apteczka Finansowa to produkt właśnie dla Ciebie!'
-            },
-            boxes: [{
-              title: 'Dla świadomych osób, które chcą uporządkować swoją dokumentację we właściwy i przejrzysty sposób.',
-              text: 'Praktycznie każdy z nas wie, że ważne dokumenty powinny być przechowywane w bezpiecznym i łatwo dostępnym miejscu. Bałagan w „papierach” to jednak odwieczny problem wielu gospodarstw domowych. Apteczka Finansowa to rozwiązanie, które pomoże Ci w uporządkowaniu kluczowych dokumentów finansowych w prosty, wygodny i skuteczny sposób.',
-            }, {
-              title: 'Dla zabieganych osób, które nie chcą poświęcać czasu i energii na przeszukiwanie domu w poszukiwaniu zagubionych dokumentów.',
-              text: 'Bałagan w dokumentach powoduje, że tracimy sporo czasu i nerwów na odnalezienie tego, co akurat jest nam potrzebne. Uniknij przyszłych frustracji i zaoszczędź cenny czas - z Apteczką Finansową z łatwością uporządkujesz swoje dokumenty i zyskasz spokój umysłu.',
-            }, {
-              title: 'Dla osób, którym zależy na bezpieczeństwie swoim oraz bliskich osób.',
-              text: 'Nikt w trudnych chwilach choroby, czy straty bliskiej osoby, nie chciałby zmagać się z poszukiwaniem ważnych dokumentów. Apteczka Finansowa pomoże Ci w ich zebraniu i uporządkowaniu. Dzięki temu w razie potrzeby Ty i Twoi bliscy będziecie mieć pod ręką najistotniejsze dokumenty finansowe, co pozwoli Wam na uniknięcie dodatkowego stresu i niepewności w trudnych momentach.',
-            }, {
-              title: 'Dla tych, którzy cenią sobie czas, wygodę i łatwość dostępu do dokumentacji.',
-              text: 'Zastanawiasz się, jaką dokumentację gromadzić i w jaki sposób ją segregować? Skorzystaj z gotowego i przemyślanego rozwiązania, jakie oferuje nasza Apteczka Finansowa. Dzięki niej bez trudu, szybko i skutecznie poukładasz najważniejsze dokumenty, a w przyszłości nie będziesz mieć problemów z ich odnalezieniem.',
-            }, {
-              title: 'Dla tych, którzy cenią sobie czas, wygodę i łatwość dostępu do dokumentacji.',
-              text: 'Zastanawiasz się, jaką dokumentację gromadzić i w jaki sposób ją segregować? Skorzystaj z gotowego i przemyślanego rozwiązania, jakie oferuje nasza Apteczka Finansowa. Dzięki niej bez trudu, szybko i skutecznie poukładasz najważniejsze dokumenty, a w przyszłości nie będziesz mieć problemów z ich odnalezieniem.',
-            }],
-          }
-        },
-        footer: {
-          leftNav: [{
-            text: 'Dlaczego warto',
-            title: 'Dlaczego warto',
-            url: 'https://test.pl',
-            type: 'link'
-          }, {
-            text: 'Co zyskasz',
-            title: 'Co zyskasz',
-            url: 'https://test.pl',
-            type: 'link'
-          }, {
-            text: 'Dla kogo',
-            title: 'Dla kogo',
-            url: 'https://test.pl',
-            type: 'link'
-          }],
-          rightText: "Apteczka finansowa © 2023 Wszystkie prawa zastrzeżone"
-        }
-      }
+      const componentsData = templateData;
 
       const filledHeaderDesktopComponenent = headerDesktopTemplate(componentsData.header);
       const filledSectionMainComponenent = sectionMainTemplate(componentsData.sections.main);

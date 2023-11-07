@@ -9,6 +9,8 @@ export function registerRoutes(router: any) {
 
   //===GENERATOR===
   router.post(`/${GENERATOR_ENDPOINT}/generate-page`, GeneratorController.generatePage);
+  router.post(`/${GENERATOR_ENDPOINT}/download-generated-page`, GeneratorController.downloadGeneratedPage);
+  router.get(`/${GENERATOR_ENDPOINT}/page-components/:pageComponentId`, GeneratorController.getPageComponentById);
 
 }
 
