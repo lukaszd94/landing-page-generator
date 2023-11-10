@@ -1,8 +1,13 @@
-@import url("https://fonts.googleapis.com/css?family=Montserrat");
+/* @import url("https://fonts.googleapis.com/css?family=Montserrat"); */
+@import '@fontsource/roboto/300.css';
+@import '@fontsource/roboto/400.css';
+@import '@fontsource/roboto/500.css';
+@import '@fontsource/roboto/700.css';
+
 .App {
   background-color: #282c34;
   min-height: 100vh;
-  font-family: "Montserrat";
+  font-family: "Roboto";
 }
 .App-header {
   display: flex;

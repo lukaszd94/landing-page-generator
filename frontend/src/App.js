@@ -3,28 +3,35 @@ import './App.scss';
 import Generator from './components/generator/generator';
 import Navbar from './components/navbar/navbar';
 import PageComponents from './components/page-components/page-components';
-// import { useState } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { blueGrey, green, purple, amber } from '@mui/material/colors';
 
 function App() {
-  //const [count, setCount] = useState(0);
-
-  // function onClick() {
-  //   setCount(count + 1);
-  // }
+  const theme = createTheme({
+    palette: {
+      primary: blueGrey,
+      secondary: purple,
+      success: green,
+      error: amber,
+      mode: 'dark'
+    },
+  });
 
   return (
-    <BrowserRouter>
-      <div className="App">
-        <Navbar />
-        <div className="App-content">
-          <Routes>
-            <Route path="/" element={<Generator />} />
-            <Route path="/generator" element={<Generator />} />
-            <Route path="/page-components" element={<PageComponents />} />
-          </Routes>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <div className="App">
+          <Navbar />
+          <div className="App-content">
+            <Routes>
+              <Route path="/" element={<Generator />} />
+              <Route path="/generator" element={<Generator />} />
+              <Route path="/page-components" element={<PageComponents />} />
+            </Routes>
+          </div>
         </div>
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

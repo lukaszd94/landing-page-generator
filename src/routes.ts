@@ -11,6 +11,8 @@ export function registerRoutes(router: any) {
   router.post(`/${GENERATOR_ENDPOINT}/generate-page`, GeneratorController.generatePage);
   router.post(`/${GENERATOR_ENDPOINT}/download-generated-page`, GeneratorController.downloadGeneratedPage);
   router.get(`/${GENERATOR_ENDPOINT}/page-components/:pageComponentId`, GeneratorController.getPageComponentById);
+  router.get(`/${GENERATOR_ENDPOINT}/page-components`, GeneratorController.getPageComponents);
+  router.put(`/${GENERATOR_ENDPOINT}/page-components/:pageComponentId`, GeneratorController.savePageComponents);
 
 }
 

@@ -25,6 +25,35 @@ export class GeneratorRepository {
     return queryResult.map((item: PageComponent) => item);
   }
 
+  static async getPageComponents(): Promise<Array<PageComponent>> {
+    const queryResult = await DbService.runQuery(`
+      SELECT
+        id,
+        name
+      FROM
+        page_component
+      ORDER BY id;
+    `);
+
+    return queryResult.map((item: PageComponent) => item);
+  }
+
+  static async savePageComponents(pageComponentId: number, pageComponent: PageComponent): Promise<void> {
+    await DbService.runQuery(`
+      UPDATE page_component
+      SET
+        name = ${pageComponent.name},
+        html_code = ${pageComponent.htmlCode},
+        css_code = ${pageComponent.cssCode},
+        js_code = ${pageComponent.jsCode},
+        html_vars = ${pageComponent.htmlVars},
+        css_vars = ${pageComponent.cssVars},
+        js_vars = ${pageComponent.jsVars}
+      WHERE
+        id = ${pageComponentId};
+    `);
+  }
+
   static async downloadGeneratedPage(): Promise<void> {
     const zip = new JSZip();
 
