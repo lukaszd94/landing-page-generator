@@ -38,20 +38,19 @@ export class GeneratorRepository {
     return queryResult.map((item: PageComponent) => item);
   }
 
-  static async savePageComponents(pageComponentId: number, pageComponent: PageComponent): Promise<void> {
-    await DbService.runQuery(`
-      UPDATE page_component
-      SET
-        name = ${pageComponent.name},
-        html_code = ${pageComponent.htmlCode},
-        css_code = ${pageComponent.cssCode},
-        js_code = ${pageComponent.jsCode},
-        html_vars = ${pageComponent.htmlVars},
-        css_vars = ${pageComponent.cssVars},
-        js_vars = ${pageComponent.jsVars}
-      WHERE
-        id = ${pageComponentId};
-    `);
+  static async savePageComponents(pageComponentId: number, pageComponent: PageComponent): Promise<number> {
+    const updatedPageComponents = (await DbService.runFunction('update_page_component',
+      pageComponentId,
+      pageComponent.name,
+      pageComponent.htmlCode,
+      pageComponent.cssCode,
+      pageComponent.jsCode,
+      pageComponent.htmlVars,
+      pageComponent.cssVars,
+      pageComponent.jsVars
+    ))[0].updatePageComponent;
+
+    return updatedPageComponents;
   }
 
   static async downloadGeneratedPage(): Promise<void> {

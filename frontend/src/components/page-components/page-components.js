@@ -72,6 +72,57 @@ function PageComponents() {
     setOpenSnackBar(false);
   };
 
+  const setHtmlCode = (code: string) => {
+    setPageComponent(prevState => {
+      return {
+        id: prevState.id,
+        pageId: prevState.pageId,
+        type: prevState.type,
+        name: prevState.name,
+        htmlCode: code,
+        cssCode: prevState.cssCode,
+        jsCode: prevState.jsCode,
+        htmlVars: prevState.htmlVars,
+        cssVars: prevState.cssVars,
+        jsVars: prevState.jsVars
+      }
+    });
+  };
+
+  const setCssCode = (code: string) => {
+    setPageComponent(prevState => {
+      return {
+        id: prevState.id,
+        pageId: prevState.pageId,
+        type: prevState.type,
+        name: prevState.name,
+        htmlCode: prevState.htmlCode,
+        cssCode: code,
+        jsCode: prevState.jsCode,
+        htmlVars: prevState.htmlVars,
+        cssVars: prevState.cssVars,
+        jsVars: prevState.jsVars
+      }
+    });
+  };
+
+  const setJsCode = (code: string) => {
+    setPageComponent(prevState => {
+      return {
+        id: prevState.id,
+        pageId: prevState.pageId,
+        type: prevState.type,
+        name: prevState.name,
+        htmlCode: prevState.htmlCode,
+        cssCode: prevState.cssCode,
+        jsCode: code,
+        htmlVars: prevState.htmlVars,
+        cssVars: prevState.cssVars,
+        jsVars: prevState.jsVars
+      }
+    });
+  };
+
 
   useEffect(() => {
     //console.log('getComponent')
@@ -102,7 +153,9 @@ function PageComponents() {
                     width="100%"
                     language="html"
                     theme="vs-dark"
+                    inlineSuggest="true"
                     value={pageComponent.htmlCode}
+                    onChange={(code) => setHtmlCode(code)}
                     options={{
                       fontSize: "12px",
                       formatOnType: true,
@@ -121,6 +174,7 @@ function PageComponents() {
                     language="scss"
                     theme="vs-dark"
                     value={pageComponent.cssCode}
+                    onChange={(code) => setCssCode(code)}
                     options={{
                       fontSize: "12px",
                       formatOnType: true,
@@ -139,6 +193,7 @@ function PageComponents() {
                     language="javascript"
                     theme="vs-dark"
                     value={pageComponent.jsCode}
+                    onChange={(code) => setJsCode(code)}
                     options={{
                       fontSize: "12px",
                       formatOnType: true,
