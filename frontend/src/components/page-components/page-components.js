@@ -6,9 +6,9 @@ import { useState, useEffect } from 'react';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 
-function PageComponents() {
-
+export default function PageComponents() {
   const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [pageComponentUrl, setPageComponentUrl] = useState(null);
   const [pageComponent, setPageComponent] = useState({
     id: null,
     pageId: null,
@@ -64,7 +64,13 @@ function PageComponents() {
     setOpenSnackBar(true);
   }
 
-  const handleCloseSnackBar = (event: Event, reason: string) => {
+  async function generateComponent() {
+    await axios.post(`http://localhost:8081/api/generator/page-components/${pageComponent.id}/generate`);
+    setPageComponentUrl('test.html');
+    setOpenSnackBar(true);
+  }
+
+  const handleCloseSnackBar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -72,7 +78,7 @@ function PageComponents() {
     setOpenSnackBar(false);
   };
 
-  const setHtmlCode = (code: string) => {
+  const setHtmlCode = (code) => {
     setPageComponent(prevState => {
       return {
         id: prevState.id,
@@ -89,7 +95,7 @@ function PageComponents() {
     });
   };
 
-  const setCssCode = (code: string) => {
+  const setCssCode = (code) => {
     setPageComponent(prevState => {
       return {
         id: prevState.id,
@@ -106,7 +112,7 @@ function PageComponents() {
     });
   };
 
-  const setJsCode = (code: string) => {
+  const setJsCode = (code) => {
     setPageComponent(prevState => {
       return {
         id: prevState.id,
@@ -132,10 +138,10 @@ function PageComponents() {
   return (
     <div className="PageComponents">
       <div>
-        <PageComponentSettings onComponentChange={(componentId) => getComponent(componentId)} onSave={() => saveComponent()} />
+        <PageComponentSettings onComponentChange={(componentId) => getComponent(componentId)} onSave={() => saveComponent()} onGenerate={() => generateComponent()} />
       </div>
 
-      <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={handleCloseSnackBar}>
+      <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={handleCloseSnackBar} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
         <Alert onClose={handleCloseSnackBar} severity="success" sx={{ width: '100%' }}>
           This is a success message!
         </Alert>
@@ -204,10 +210,14 @@ function PageComponents() {
               </div>
             </div>
 
-            <div>
+            <div className="w-full">
               <h4>COMPONENT</h4>
-              <div>
-                content
+              <div className="page-component">
+                <iframe title="generated-page" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                  referrerPolicy="origin" className="page-component__iframe"
+                  src={pageComponentUrl} id="generated-page-iframe"
+                  allowtransparency="true">
+                </iframe>
               </div>
             </div>
           </div>
@@ -218,10 +228,6 @@ function PageComponents() {
           </div>
         )
       }
-
-
     </div>
   );
 }
-
-export default PageComponents;

@@ -118,7 +118,8 @@ END;
 $BODY$;
 
 
-
+ALTER TABLE page_component
+ADD COLUMN local_url text;
 
 
 

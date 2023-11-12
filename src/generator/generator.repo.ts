@@ -1,6 +1,6 @@
 import { DbService } from "../core/utils/db.service.js";
 import Handlebars from "handlebars";
-import { readFileSync, writeFileSync, createWriteStream, readdir } from 'fs';
+import { readFileSync, writeFileSync, createWriteStream, readdir, existsSync, mkdirSync } from 'fs';
 import path from 'path';
 import JSZip from "jszip";
 import { fileURLToPath } from 'url';
@@ -145,6 +145,38 @@ export class GeneratorRepository {
     catch (err) {
       console.log(err);
     }
-
   }
+
+
+  static async generatePageComponent(pageComponentId: number): Promise<void> {
+    try {
+
+      const compnentData = await this.getPageComponentById(pageComponentId);
+
+      console.log(compnentData);
+
+      const componentHtmlFromDb = compnentData[0].htmlCode;
+      const componentTemplate = Handlebars.compile(componentHtmlFromDb);
+
+      const componentVars = {
+        test: 1
+      };
+
+      const filledComponentTemplate = componentTemplate(componentVars);
+
+      if (!existsSync(`generated/generated-components/${pageComponentId}`)) {
+        mkdirSync(`generated/generated-components/${pageComponentId}`);
+      }
+
+      console.log('Generated!');
+
+      writeFileSync(`generated/generated-components/${pageComponentId}/component.html`, filledComponentTemplate);
+
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+
 }

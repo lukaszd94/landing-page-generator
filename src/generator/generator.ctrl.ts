@@ -85,7 +85,25 @@ export class GeneratorController {
       const pageComponentId = +req.params.pageComponentId;
       await GeneratorRepository.savePageComponents(pageComponentId, pageComponent);
 
-      HttpClientHelper.send<Array<void>>(res, {
+      HttpClientHelper.send<void>(res, {
+        payload: null,
+        code: StatusCodes.SUCCESS,
+      });
+    } catch (err) {
+      HttpClientHelper.send<void>(res, {
+        error: DEFINED_ERRORS.UNKNOWN_ERROR,
+        code: StatusCodes.INTERNAL_ERROR,
+      });
+    }
+  }
+
+  static async generatePageComponent(req: Request, res: Response) {
+    try {
+
+      const pageComponentId = +req.params.pageComponentId;
+      await GeneratorRepository.generatePageComponent(pageComponentId);
+
+      HttpClientHelper.send<void>(res, {
         payload: null,
         code: StatusCodes.SUCCESS,
       });

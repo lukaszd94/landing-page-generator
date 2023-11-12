@@ -13,3 +13,14 @@
     height: 500px;
   }
 }
+
+.page-component {
+  border: solid 1px;
+  width: 100%;
+  min-height: 700px;
+  border-radius: 6px;
+
+  &-iframe {
+
+  }
+}

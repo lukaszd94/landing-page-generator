@@ -13,6 +13,7 @@ export function registerRoutes(router: any) {
   router.get(`/${GENERATOR_ENDPOINT}/page-components/:pageComponentId`, GeneratorController.getPageComponentById);
   router.get(`/${GENERATOR_ENDPOINT}/page-components`, GeneratorController.getPageComponents);
   router.put(`/${GENERATOR_ENDPOINT}/page-components/:pageComponentId`, GeneratorController.savePageComponents);
+  router.post(`/${GENERATOR_ENDPOINT}/page-components/:pageComponentId/generate`, GeneratorController.generatePageComponent);
 
 }
 

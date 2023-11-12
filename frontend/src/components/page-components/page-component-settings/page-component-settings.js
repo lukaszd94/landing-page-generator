@@ -9,8 +9,7 @@ import Save from '@mui/icons-material/Save';
 import Add from '@mui/icons-material/Add';
 import Delete from '@mui/icons-material/Delete';
 
-export default function PageComponentSettings({ onComponentChange, onSave }) {
-
+export default function PageComponentSettings({ onComponentChange, onSave, onGenerate }) {
   const [pageComponents, setPageComponents] = useState([]);
 
   async function getComponents() {
@@ -29,7 +28,7 @@ export default function PageComponentSettings({ onComponentChange, onSave }) {
 
   function onPageComponentChange(value) {
     console.log('onPageComponentChange: ', value);
-    onComponentChange(value ? value.id: null);
+    onComponentChange(value ? value.id : null);
   }
 
   useEffect(() => {
@@ -61,6 +60,10 @@ export default function PageComponentSettings({ onComponentChange, onSave }) {
           </div>
           <div>
             <ButtonGroup variant="outlined" aria-label="outlined primary button group">
+              <Button onClick={(event) => onGenerate()}>
+                <Save />
+                <span className="ml-2">Generate</span>
+              </Button>
               <Button color="success" onClick={(event) => onSave()}>
                 <Save />
                 <span className="ml-2">Save</span>
