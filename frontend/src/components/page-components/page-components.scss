@@ -19,8 +19,13 @@
   width: 100%;
   min-height: 700px;
   border-radius: 6px;
+  background: white;
 
-  &-iframe {
-
+  &__iframe {
+    width: calc(100% * 2);
+    height: calc(600px * 2);
+    border-radius: 6px;
+    transform: scale(0.5);
+    transform-origin: 0 0;
   }
 }

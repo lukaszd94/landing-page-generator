@@ -78,12 +78,13 @@ export class GeneratorController {
     }
   }
 
-  static async savePageComponents(req: Request, res: Response) {
+  static async savePageComponent(req: Request, res: Response) {
     try {
 
       const pageComponent = req.body;
       const pageComponentId = +req.params.pageComponentId;
-      await GeneratorRepository.savePageComponents(pageComponentId, pageComponent);
+      await GeneratorRepository.savePageComponent(pageComponentId, pageComponent);
+      await GeneratorRepository.generatePageComponent(pageComponentId);
 
       HttpClientHelper.send<void>(res, {
         payload: null,

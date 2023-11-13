@@ -38,7 +38,7 @@ export class GeneratorRepository {
     return queryResult.map((item: PageComponent) => item);
   }
 
-  static async savePageComponents(pageComponentId: number, pageComponent: PageComponent): Promise<number> {
+  static async savePageComponent(pageComponentId: number, pageComponent: PageComponent): Promise<number> {
     const updatedPageComponents = (await DbService.runFunction('update_page_component',
       pageComponentId,
       pageComponent.name,
@@ -70,7 +70,6 @@ export class GeneratorRepository {
       });
 
   }
-
 
   static async generatePage(templateData: {
     header: object,
@@ -147,7 +146,6 @@ export class GeneratorRepository {
     }
   }
 
-
   static async generatePageComponent(pageComponentId: number): Promise<void> {
     try {
 
@@ -158,9 +156,7 @@ export class GeneratorRepository {
       const componentHtmlFromDb = compnentData[0].htmlCode;
       const componentTemplate = Handlebars.compile(componentHtmlFromDb);
 
-      const componentVars = {
-        test: 1
-      };
+      const componentVars =  compnentData[0].htmlVars;
 
       const filledComponentTemplate = componentTemplate(componentVars);
 
