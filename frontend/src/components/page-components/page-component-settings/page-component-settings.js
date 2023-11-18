@@ -8,8 +8,9 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Save from '@mui/icons-material/Save';
 import Add from '@mui/icons-material/Add';
 import Delete from '@mui/icons-material/Delete';
+import { socket } from '../../../socket';
 
-export default function PageComponentSettings({ onComponentChange, onSave, onGenerate }) {
+export default function PageComponentSettings({ onComponentChange, onSave, onGenerate, selectedComponentId }) {
   const [pageComponents, setPageComponents] = useState([]);
 
   async function getComponents() {
@@ -34,6 +35,10 @@ export default function PageComponentSettings({ onComponentChange, onSave, onGen
   useEffect(() => {
     console.log('getComponents')
     getComponents();
+
+    socket.on('generated', (args) => {
+      console.log('test', args);
+    });
   }, []);
 
 
@@ -58,26 +63,34 @@ export default function PageComponentSettings({ onComponentChange, onSave, onGen
 
             </div>
           </div>
-          <div>
-            <ButtonGroup variant="outlined" aria-label="outlined primary button group">
-              <Button onClick={(event) => onGenerate()}>
-                <Save />
-                <span className="ml-2">Generate</span>
-              </Button>
-              <Button color="success" onClick={(event) => onSave()}>
-                <Save />
-                <span className="ml-2">Save</span>
-              </Button>
-              <Button>
-                <Add />
-                <span className="ml-2">Add</span>
-              </Button>
-              <Button color="error">
-                <Delete />
-                <span className="ml-2">Delete</span>
-              </Button>
-            </ButtonGroup>
-          </div>
+          {selectedComponentId != null ?
+            (
+              <div>
+                <ButtonGroup variant="outlined" aria-label="outlined primary button group">
+                  {/* <Button onClick={(event) => onGenerate()}>
+                    <Save />
+                    <span className="ml-2">Generate</span>
+                  </Button> */}
+                  <Button color="success" onClick={(event) => onSave()}>
+                    <Save />
+                    <span className="ml-2">Save</span>
+                  </Button>
+                  <Button>
+                    <Add />
+                    <span className="ml-2">Add</span>
+                  </Button>
+                  <Button color="error">
+                    <Delete />
+                    <span className="ml-2">Delete</span>
+                  </Button>
+                </ButtonGroup>
+              </div>
+            )
+            :
+            (
+              <div></div>
+            )
+          }
         </div>
       </div>
     </div>

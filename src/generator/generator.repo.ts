@@ -146,7 +146,7 @@ export class GeneratorRepository {
     }
   }
 
-  static async generatePageComponent(pageComponentId: number): Promise<void> {
+  static async generatePageComponent(pageComponentId: number): Promise<string> {
     try {
 
       const compnentData = await this.getPageComponentById(pageComponentId);
@@ -168,9 +168,11 @@ export class GeneratorRepository {
 
       writeFileSync(`generated/generated-components/${pageComponentId}/component.html`, filledComponentTemplate);
 
+      return `/generated-components/${pageComponentId}/component.html`;
     }
     catch (err) {
       console.log(err);
+      return null;
     }
   }
 

@@ -65,20 +65,13 @@ export default function PageComponents() {
     await axios.put(`http://localhost:8081/api/generator/page-components/${pageComponent.id}`, pageComponent);
     setPageComponentUrl(`http://localhost:8081/generated-components/${pageComponent.id}/component.html`);
     setOpenSnackBar(true);
-    generatedPageReload();
   }
 
   async function generateComponent() {
     await axios.post(`http://localhost:8081/api/generator/page-components/${pageComponent.id}/generate`);
     setPageComponentUrl(`http://localhost:8081/generated-components/${pageComponent.id}/component.html`);
     setOpenSnackBar(true);
-    generatedPageReload();
   }
-
-  function generatedPageReload() {
-    document.getElementById('generated-page-component-iframe').src = document.getElementById('generated-page-component-iframe').src;
-  }
-
 
   const handleCloseSnackBar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -87,6 +80,17 @@ export default function PageComponents() {
 
     setOpenSnackBar(false);
   };
+
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 's') {
+      // Prevent the Save dialog to open
+      e.preventDefault();
+      // Place your code here
+      console.log('CTRL + S');
+
+      saveComponent();
+    }
+  });
 
   const setHtmlCode = (code) => {
     setPageComponent(prevState => {
@@ -166,7 +170,7 @@ export default function PageComponents() {
   return (
     <div className="PageComponents">
       <div>
-        <PageComponentSettings onComponentChange={(componentId) => getComponent(componentId)} onSave={() => saveComponent()} onGenerate={() => generateComponent()} />
+        <PageComponentSettings selectedComponentId={pageComponent.id} onComponentChange={(componentId) => getComponent(componentId)} onSave={() => saveComponent()} onGenerate={() => generateComponent()} />
       </div>
 
       <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={handleCloseSnackBar} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
@@ -305,18 +309,6 @@ export default function PageComponents() {
                     />
                   </div>
                 </div>
-              </div>
-            </div>
-
-
-            <div className="w-full">
-              <h4>COMPONENT</h4>
-              <div className="page-component">
-                <iframe title="generated-page-component" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                  referrerPolicy="origin" className="page-component__iframe"
-                  src={pageComponentUrl} id="generated-page-component-iframe"
-                  allowtransparency="true">
-                </iframe>
               </div>
             </div>
           </div>

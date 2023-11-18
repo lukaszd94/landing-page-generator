@@ -3,6 +3,7 @@ import { GeneratorRepository } from "./generator.repo.js";
 import { Request, Response } from "express";
 import { DEFINED_ERRORS } from "../core/utils/definedErrors.js";
 import { PageComponent } from "./generator.model.js";
+import { Server } from 'socket.io';
 
 export class GeneratorController {
 
@@ -78,13 +79,18 @@ export class GeneratorController {
     }
   }
 
-  static async savePageComponent(req: Request, res: Response) {
+  static async savePageComponent(req: Request, res: Response, io: Server) {
     try {
 
       const pageComponent = req.body;
       const pageComponentId = +req.params.pageComponentId;
       await GeneratorRepository.savePageComponent(pageComponentId, pageComponent);
-      await GeneratorRepository.generatePageComponent(pageComponentId);
+      const generatedComponentUrl = await GeneratorRepository.generatePageComponent(pageComponentId);
+
+      io.emit('generated', {
+        pageComponentId: pageComponentId,
+        pageComponentUrl: generatedComponentUrl
+      });
 
       HttpClientHelper.send<void>(res, {
         payload: null,
@@ -98,14 +104,19 @@ export class GeneratorController {
     }
   }
 
-  static async generatePageComponent(req: Request, res: Response) {
+  static async generatePageComponent(req: Request, res: Response, io: Server) {
     try {
 
       const pageComponentId = +req.params.pageComponentId;
-      await GeneratorRepository.generatePageComponent(pageComponentId);
+      const generatedComponentUrl = await GeneratorRepository.generatePageComponent(pageComponentId);
 
-      HttpClientHelper.send<void>(res, {
-        payload: null,
+      io.emit('generated', {
+        pageComponentId: pageComponentId,
+        pageComponentUrl: generatedComponentUrl
+      });
+
+      HttpClientHelper.send<string>(res, {
+        payload: generatedComponentUrl,
         code: StatusCodes.SUCCESS,
       });
     } catch (err) {
