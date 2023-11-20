@@ -155,10 +155,13 @@ export class GeneratorRepository {
 
       const componentHtmlFromDb = compnentData[0].htmlCode;
       const componentTemplate = Handlebars.compile(componentHtmlFromDb);
-
       const componentVars =  compnentData[0].htmlVars;
-
       const filledComponentTemplate = componentTemplate(componentVars);
+
+      const componentCssFromDb = compnentData[0].cssCode;
+      const componentCssTemplate = Handlebars.compile(componentCssFromDb);
+      const componentCssVars =  compnentData[0].cssVars;
+      const filledComponentCssTemplate = componentCssTemplate(componentCssVars);
 
       if (!existsSync(`generated/generated-components/${pageComponentId}`)) {
         mkdirSync(`generated/generated-components/${pageComponentId}`);
@@ -167,6 +170,7 @@ export class GeneratorRepository {
       console.log('Generated!');
 
       writeFileSync(`generated/generated-components/${pageComponentId}/component.html`, filledComponentTemplate);
+      writeFileSync(`generated/generated-components/${pageComponentId}/component.css`, filledComponentCssTemplate);
 
       return `/generated-components/${pageComponentId}/component.html`;
     }

@@ -8,7 +8,7 @@ import Snackbar from '@mui/material/Snackbar';
 
 export default function PageComponents() {
   const [openSnackBar, setOpenSnackBar] = useState(false);
-  const [pageComponentUrl, setPageComponentUrl] = useState(null);
+  const [pageComponentId, setPageComponentId] = useState(null);
   const [pageComponent, setPageComponent] = useState({
     id: null,
     pageId: null,
@@ -22,12 +22,13 @@ export default function PageComponents() {
     jsVars: null,
   });
 
+
   async function getComponent(pageComponentId) {
     if (pageComponentId) {
       const { data } = await axios.get(`http://localhost:8081/api/generator/page-components/${pageComponentId}`);
       const pageComp = data.payload[0];
 
-      setPageComponentUrl(`http://localhost:8081/generated-components/${pageComp.id}/component.html`);
+      setPageComponentId(pageComp.id);
 
       return setPageComponent(prevState => {
         return {
@@ -61,16 +62,18 @@ export default function PageComponents() {
     }
   }
 
-  async function saveComponent() {
-    await axios.put(`http://localhost:8081/api/generator/page-components/${pageComponent.id}`, pageComponent);
-    setPageComponentUrl(`http://localhost:8081/generated-components/${pageComponent.id}/component.html`);
-    setOpenSnackBar(true);
+  async function saveComponent(id) {
+    if (id) {
+      await axios.put(`http://localhost:8081/api/generator/page-components/${id}`, pageComponent);
+      setOpenSnackBar(true);
+    }
   }
 
-  async function generateComponent() {
-    await axios.post(`http://localhost:8081/api/generator/page-components/${pageComponent.id}/generate`);
-    setPageComponentUrl(`http://localhost:8081/generated-components/${pageComponent.id}/component.html`);
-    setOpenSnackBar(true);
+  async function generateComponent(id) {
+    if (id) {
+      await axios.post(`http://localhost:8081/api/generator/page-components/${id}/generate`);
+      setOpenSnackBar(true);
+    }
   }
 
   const handleCloseSnackBar = (event, reason) => {
@@ -80,17 +83,6 @@ export default function PageComponents() {
 
     setOpenSnackBar(false);
   };
-
-  document.addEventListener('keydown', e => {
-    if (e.ctrlKey && e.key === 's') {
-      // Prevent the Save dialog to open
-      e.preventDefault();
-      // Place your code here
-      console.log('CTRL + S');
-
-      saveComponent();
-    }
-  });
 
   const setHtmlCode = (code) => {
     setPageComponent(prevState => {
@@ -162,15 +154,31 @@ export default function PageComponents() {
   };
 
 
+
+  const onCtrlS = (event) => {
+    if (event.ctrlKey && event.key === 's') {
+      event.preventDefault();
+      console.log('CTRL + S');
+      saveComponent(pageComponentId);
+    }
+  }
+
+
   useEffect(() => {
     //console.log('getComponent')
     //getComponent(2);
-  }, []);
+
+    document.addEventListener('keydown', onCtrlS);
+
+    return () => {
+      document.removeEventListener("keydown", onCtrlS);
+    };
+  }, [onCtrlS]);
 
   return (
     <div className="PageComponents">
       <div>
-        <PageComponentSettings selectedComponentId={pageComponent.id} onComponentChange={(componentId) => getComponent(componentId)} onSave={() => saveComponent()} onGenerate={() => generateComponent()} />
+        <PageComponentSettings selectedComponentId={pageComponent.id} onComponentChange={(componentId) => getComponent(componentId)} onSave={() => saveComponent(pageComponentId)} onGenerate={() => generateComponent(pageComponentId)} />
       </div>
 
       <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={handleCloseSnackBar} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
@@ -178,6 +186,8 @@ export default function PageComponents() {
           Saved!
         </Alert>
       </Snackbar>
+
+      pageComponentId: {pageComponentId}
 
       {pageComponent.id > 0 ?
         (

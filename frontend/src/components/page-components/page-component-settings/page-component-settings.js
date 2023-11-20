@@ -32,14 +32,23 @@ export default function PageComponentSettings({ onComponentChange, onSave, onGen
     onComponentChange(value ? value.id : null);
   }
 
+  function openGeneratedComponent() {
+    window.open(`/page-components/${selectedComponentId}`, "_blank");
+  }
+
+  const onGeneretedEvent = (args) => {
+      console.log('on generated event', args);
+  }
+
   useEffect(() => {
-    console.log('getComponents')
     getComponents();
 
-    socket.on('generated', (args) => {
-      console.log('test', args);
-    });
-  }, []);
+    socket.on('generated', onGeneretedEvent);
+
+    return () => {
+      socket.off('generated', onGeneretedEvent);
+    }
+  }, [socket]);
 
 
   return (
@@ -71,6 +80,10 @@ export default function PageComponentSettings({ onComponentChange, onSave, onGen
                     <Save />
                     <span className="ml-2">Generate</span>
                   </Button> */}
+
+                  <Button onClick={(event) => openGeneratedComponent()}>
+                    <span className="ml-2">Open Generated Component</span>
+                  </Button>
                   <Button color="success" onClick={(event) => onSave()}>
                     <Save />
                     <span className="ml-2">Save</span>
