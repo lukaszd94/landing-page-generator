@@ -127,4 +127,40 @@ export class GeneratorController {
     }
   }
 
+  static async createPageComponent(req: Request, res: Response) {
+    try {
+
+      const pageComponent = req.body;
+      const newPageComponentId = await GeneratorRepository.createPageComponent(pageComponent);
+
+      HttpClientHelper.send<number>(res, {
+        payload: newPageComponentId,
+        code: StatusCodes.SUCCESS,
+      });
+    } catch (err) {
+      HttpClientHelper.send<void>(res, {
+        error: DEFINED_ERRORS.UNKNOWN_ERROR,
+        code: StatusCodes.INTERNAL_ERROR,
+      });
+    }
+  }
+
+  static async deletePageComponent(req: Request, res: Response) {
+    try {
+
+      const pageComponentId = +req.params.pageComponentId;
+      await GeneratorRepository.deleteGeneratedComponent(pageComponentId);
+
+      HttpClientHelper.send<void>(res, {
+        payload: null,
+        code: StatusCodes.SUCCESS,
+      });
+    } catch (err) {
+      HttpClientHelper.send<void>(res, {
+        error: DEFINED_ERRORS.UNKNOWN_ERROR,
+        code: StatusCodes.INTERNAL_ERROR,
+      });
+    }
+  }
+
 }

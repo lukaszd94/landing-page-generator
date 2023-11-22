@@ -123,6 +123,47 @@ ADD COLUMN local_url text;
 
 
 
+CREATE OR REPLACE FUNCTION create_page_component(
+        p_name text,
+        p_html_code text,
+        p_css_code text,
+        p_js_code text,
+        p_html_vars text,
+        p_css_vars text,
+        p_js_vars text
+	)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+	v_id int;
+BEGIN
+
+    INSERT INTO page_component(
+        name,
+        html_code,
+        css_code,
+        js_code,
+        html_vars,
+        css_vars,
+        js_vars,
+        updated_at
+    )
+    VALUES(
+        name = p_name,
+        p_html_code,
+        p_css_code,
+        p_js_code,
+        p_html_vars,
+        p_css_vars,
+        p_js_vars,
+        now()
+    )
+    RETURNING id INTO v_id;
+
+	RETURN v_id;
+END;
+$BODY$;
 
 
 

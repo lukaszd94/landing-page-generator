@@ -1,6 +1,14 @@
 import { DbService } from "../core/utils/db.service.js";
 import Handlebars from "handlebars";
-import { readFileSync, writeFileSync, createWriteStream, readdir, existsSync, mkdirSync } from 'fs';
+import {
+  readFileSync,
+  writeFileSync,
+  createWriteStream,
+  readdir,
+  existsSync,
+  mkdirSync,
+  rmSync
+} from 'fs';
 import path from 'path';
 import JSZip from "jszip";
 import { fileURLToPath } from 'url';
@@ -51,6 +59,20 @@ export class GeneratorRepository {
     ))[0].updatePageComponent;
 
     return updatedPageComponents;
+  }
+
+  static async createPageComponent(pageComponent: PageComponent): Promise<number> {
+    const createdPageComponent = (await DbService.runFunction('create_page_component',
+      pageComponent.name,
+      pageComponent.htmlCode,
+      pageComponent.cssCode,
+      pageComponent.jsCode,
+      pageComponent.htmlVars,
+      pageComponent.cssVars,
+      pageComponent.jsVars
+    ))[0].createPageComponent;
+
+    return createdPageComponent;
   }
 
   static async downloadGeneratedPage(): Promise<void> {
@@ -155,12 +177,12 @@ export class GeneratorRepository {
 
       const componentHtmlFromDb = compnentData[0].htmlCode;
       const componentTemplate = Handlebars.compile(componentHtmlFromDb);
-      const componentVars =  compnentData[0].htmlVars;
+      const componentVars = compnentData[0].htmlVars;
       const filledComponentTemplate = componentTemplate(componentVars);
 
       const componentCssFromDb = compnentData[0].cssCode;
       const componentCssTemplate = Handlebars.compile(componentCssFromDb);
-      const componentCssVars =  compnentData[0].cssVars;
+      const componentCssVars = compnentData[0].cssVars;
       const filledComponentCssTemplate = componentCssTemplate(componentCssVars);
 
       if (!existsSync(`generated/generated-components/${pageComponentId}`)) {
@@ -180,5 +202,13 @@ export class GeneratorRepository {
     }
   }
 
+  static async deleteGeneratedComponent(pageComponentId: number): Promise<void> {
+    await DbService.runQuery(`
+      DELETE FROM page_component
+      WHERE id = ${pageComponentId};
+    `);
+
+    rmSync(`generated/generated-components/${pageComponentId}`, { recursive: true, force: true });
+  }
 
 }
