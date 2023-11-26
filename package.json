@@ -22,9 +22,9 @@
     "typescript": "~5.1"
   },
   "scripts": {
-    "compile": "tsc -p tsconfig.json && node build/src/app.js --mode dev --db localhost",
+    "compile": "tsc -p tsconfig.json && node build/src/app.js --mode dev --db remote",
     "dev": "nodemon -e ts --exec \"npm run compile\"",
-    "start": "node build/src/app.js --mode dev --db localhost",
+    "start": "node build/src/app.js --mode dev --db remote",
     "clean": "rimraf coverage build tmp",
     "prebuild": "npm run lint",
     "build": "tsc -p tsconfig.json",

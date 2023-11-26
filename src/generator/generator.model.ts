@@ -9,9 +9,9 @@ export class PageComponent {
   public cssCode: string;
   public jsCode: string;
 
-  public htmlVars: object;
-  public cssVars: object;
-  public jsVars: object;
+  public htmlVars: string;
+  public cssVars: string;
+  public jsVars: string;
 
   public createdAt: Date;
   public modifiedAt: Date;

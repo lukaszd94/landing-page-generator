@@ -47,6 +47,10 @@ export class GeneratorRepository {
   }
 
   static async savePageComponent(pageComponentId: number, pageComponent: PageComponent): Promise<number> {
+    pageComponent.htmlVars = JSON.parse(pageComponent.htmlVars);
+    pageComponent.cssVars = JSON.parse(pageComponent.cssVars);
+    pageComponent.jsVars = JSON.parse(pageComponent.jsVars);
+
     const updatedPageComponents = (await DbService.runFunction('update_page_component',
       pageComponentId,
       pageComponent.name,
@@ -62,6 +66,10 @@ export class GeneratorRepository {
   }
 
   static async createPageComponent(pageComponent: PageComponent): Promise<number> {
+    pageComponent.htmlVars = JSON.parse(pageComponent.htmlVars);
+    pageComponent.cssVars = JSON.parse(pageComponent.cssVars);
+    pageComponent.jsVars = JSON.parse(pageComponent.jsVars);
+
     const createdPageComponent = (await DbService.runFunction('create_page_component',
       pageComponent.name,
       pageComponent.htmlCode,
@@ -185,14 +193,48 @@ export class GeneratorRepository {
       const componentCssVars = compnentData[0].cssVars;
       const filledComponentCssTemplate = componentCssTemplate(componentCssVars);
 
+      const componentJsFromDb = compnentData[0].jsCode;
+      const componentJsTemplate = Handlebars.compile(componentJsFromDb);
+      const componentJsVars = compnentData[0].jsVars;
+      const filledComponentJsTemplate = componentJsTemplate(componentJsVars);
+
+      const mainLayout = `
+        <!DOCTYPE html>
+        <html lang="en" data-lt-installed="true">
+
+        <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+          <title>COMPONENT PREVIEW</title>
+
+          <link type="text/css" rel="stylesheet" href="./component.css">
+
+        </head>
+
+        <body>
+          <div>
+            {{{componentTemplate}}}
+          </div>
+        </body>
+
+        <script src="component.js"></script>
+        </html>
+      `;
+      const mainLayoutTemplate = Handlebars.compile(mainLayout);
+      const component = mainLayoutTemplate({
+        componentTemplate: filledComponentTemplate
+      });
+
       if (!existsSync(`generated/generated-components/${pageComponentId}`)) {
         mkdirSync(`generated/generated-components/${pageComponentId}`);
       }
 
       console.log('Generated!');
 
-      writeFileSync(`generated/generated-components/${pageComponentId}/component.html`, filledComponentTemplate);
+      writeFileSync(`generated/generated-components/${pageComponentId}/component.html`, component);
       writeFileSync(`generated/generated-components/${pageComponentId}/component.css`, filledComponentCssTemplate);
+      writeFileSync(`generated/generated-components/${pageComponentId}/component.js`, filledComponentJsTemplate);
 
       return `/generated-components/${pageComponentId}/component.html`;
     }

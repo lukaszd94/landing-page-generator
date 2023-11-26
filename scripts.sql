@@ -150,13 +150,13 @@ BEGIN
         updated_at
     )
     VALUES(
-        name = p_name,
+        p_name,
         p_html_code,
         p_css_code,
         p_js_code,
-        p_html_vars,
-        p_css_vars,
-        p_js_vars,
+        p_html_vars::json,
+        p_css_vars::json,
+        p_js_vars::json,
         now()
     )
     RETURNING id INTO v_id;
@@ -164,8 +164,4 @@ BEGIN
 	RETURN v_id;
 END;
 $BODY$;
-
-
-
-
 
