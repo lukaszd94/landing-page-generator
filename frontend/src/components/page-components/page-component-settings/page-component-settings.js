@@ -16,7 +16,7 @@ export default function PageComponentSettings({ pageComponents, onComponentChang
   const setSelectedPageComponent = usePageComponentsStore(state => state.setSelectedPageComponent);
 
   function onPageComponentChange(value) {
-    console.log('onPageComponentChange: ', value);
+    // console.log('onPageComponentChange: ', value);
     onComponentChange(value ? value.id : null);
     setSelectedPageComponent(value);
     setCurrentPageComponentId(value?.id);
@@ -27,7 +27,7 @@ export default function PageComponentSettings({ pageComponents, onComponentChang
   }
 
   const onGeneretedEvent = (args) => {
-    console.log('on generated event', args);
+    // console.log('on generated event', args);
   }
 
   useEffect(() => {
@@ -42,7 +42,6 @@ export default function PageComponentSettings({ pageComponents, onComponentChang
   return (
     <div className="PageComponentSettings">
       <div>
-        <h4>Settings</h4>
         <div className="flex justify-between items-center settings-container">
           <div className="flex items-center">
             <div>

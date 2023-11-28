@@ -17,6 +17,7 @@ export function registerRoutes(router: any, io: Server) {
   router.post(`/${GENERATOR_ENDPOINT}/page-components/:pageComponentId/generate`, (req: Request, res: Response) => GeneratorController.generatePageComponent(req, res, io));
   router.post(`/${GENERATOR_ENDPOINT}/page-components`, (req: Request, res: Response) => GeneratorController.createPageComponent(req, res));
   router.delete(`/${GENERATOR_ENDPOINT}/page-components/:pageComponentId`, (req: Request, res: Response) => GeneratorController.deletePageComponent(req, res));
+  router.get(`/${GENERATOR_ENDPOINT}/page-components/:pageComponentId/url`, (req: Request, res: Response) => GeneratorController.getPageComponentUrl(req, res));
 
 }
 

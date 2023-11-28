@@ -253,4 +253,9 @@ export class GeneratorRepository {
     rmSync(`generated/generated-components/${pageComponentId}`, { recursive: true, force: true });
   }
 
+
+  static async getPageComponentUrl(pageComponentId: number): Promise<string> {
+    return `/generated-components/${pageComponentId}/component.html`;
+  }
+
 }

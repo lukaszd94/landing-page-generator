@@ -1,7 +1,16 @@
 import './generator.scss';
 import axios from 'axios';
 import GeneratorForm from './generator-form/generator-form.js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import { usePageComponentsStore } from '../../store';
+import Add from '@mui/icons-material/Add';
+import RemoveCircle from '@mui/icons-material/RemoveCircle';
+// import Save from '@mui/icons-material/Save';
+// import Delete from '@mui/icons-material/Delete';
+
 
 function Generator() {
   const [templateData, setTemplateData] = useState({
@@ -80,6 +89,29 @@ function Generator() {
     }
   });
 
+  const selectedPageType = usePageComponentsStore(state => state.generator.selectedPageType);
+  const pageTypes = usePageComponentsStore(state => state.generator.pageTypes);
+  const setSelectedPageType = usePageComponentsStore(state => state.setSelectedPageType);
+  const getPageTypes = usePageComponentsStore(state => state.getPageTypes);
+
+  const selectedTheme = usePageComponentsStore(state => state.generator.selectedTheme);
+  const themes = usePageComponentsStore(state => state.generator.themes);
+  const setSelectedTheme = usePageComponentsStore(state => state.setSelectedTheme);
+  const getThemes = usePageComponentsStore(state => state.getThemes);
+
+  const selectedLayout = usePageComponentsStore(state => state.generator.selectedLayout);
+  const layouts = usePageComponentsStore(state => state.generator.layouts);
+  const setSelectedLayout = usePageComponentsStore(state => state.setSelectedLayout);
+  const getLayouts = usePageComponentsStore(state => state.getLayouts);
+
+  const selectedTempPageComponent = usePageComponentsStore(state => state.generator.selectedTempPageComponent);
+  const selectedPageComponents = usePageComponentsStore(state => state.generator.selectedComponents);
+  const pageComponents = usePageComponentsStore(state => state.pageComponents);
+  const setSelectedTempPageComponent = usePageComponentsStore(state => state.setSelectedTempPageComponent);
+  const addTempPageComponentToPage = usePageComponentsStore(state => state.addTempPageComponentToPage);
+  const removeTempPageComponentToPage = usePageComponentsStore(state => state.removeTempPageComponentToPage);
+  const getPageComponents = usePageComponentsStore(state => state.getPageComponents);
+
   function goToGeneratedPage() {
     window.location.href = 'http://localhost:8081/generated-page.html';
   }
@@ -109,62 +141,52 @@ function Generator() {
       });
   }
 
-
-  function onInputChange(event) {
-    const updatedTemplateData = {
-      sections: {
-        ...templateData.sections,
-        forWho: {
-          ...templateData.sections.forWho,
-          header: {
-            ...templateData.sections.forWho.header,
-            title: event.target.value
-          }
-        }
-      }
-    };
-
-    setTemplateData((templateData) => ({
-      ...templateData,
-      ...updatedTemplateData
-    }));
+  function onPageTypeChange(value) {
+    setSelectedPageType(value);
   }
 
-  function deleteBox(index) {
-    const updatedBoxes = templateData.sections.forWho.boxes.filter((item, idx) => idx !== index);
+  function onThemeChange(value) {
+    setSelectedTheme(value);
+  }
 
-    const updatedTemplateData = {
-      sections: {
-        ...templateData.sections,
-        forWho: {
-          ...templateData.sections.forWho,
-          boxes: updatedBoxes
-        }
-      }
-    };
+  function onLayoutChange(value) {
+    setSelectedLayout(value);
+  }
 
-    setTemplateData((templateData) => ({
-      ...templateData,
-      ...updatedTemplateData
-    }));
-  };
+  function onTempPageComponentChange(value) {
+    setSelectedTempPageComponent(value);
+  }
+
+  function addPageComponentToPage() {
+    addTempPageComponentToPage(selectedTempPageComponent);
+  }
+
+  function removePageComponentFromPage(id) {
+    removeTempPageComponentToPage(id);
+  }
+
+  useEffect(() => {
+    getPageTypes();
+    getThemes();
+    getLayouts();
+    getPageComponents();
+  }, []);
 
 
   return (
     <div className="Generator">
-      <h3>Generator</h3>
       <div className="menu">
-        <div>
-          <button className="menu__goto-btn" onClick={goToGeneratedPage}>Go to generated page</button>
+        <div className="p-2">
+          <Button variant="outlined" onClick={goToGeneratedPage}>Go to generated page</Button>
         </div>
-        <div>
-          <button className="menu__reload-btn" onClick={generatedPageReload}>Reload generated page</button>
+        <div className="p-2">
+          <Button variant="outlined" onClick={generatedPageReload}>Reload generated page</Button>
         </div>
-        <div>
-          <button className="menu__generate-btn" onClick={generatePage}>Generate page</button>
+        <div className="p-2">
+          <Button variant="outlined" onClick={generatePage}>Generate page</Button>
         </div>
-        <div>
-          <button className="menu__generate-btn" onClick={downloadGeneratedPage}>Download generated page</button>
+        <div className="p-2">
+          <Button variant="outlined" onClick={downloadGeneratedPage}>Download generated page</Button>
         </div>
       </div>
 
@@ -174,89 +196,97 @@ function Generator() {
         <div className="w-1/3">
           <GeneratorForm className="" />
 
-          {/* {templateData.sections.forWho.boxes.map((box, index) => {
-            return (
-              <div key={index}>
-                <h2>title: {box.title}</h2>
-                <h2>text: {box.text}</h2>
-                <hr />
-              </div>
-            );
-          })
-          } */}
-
           <div>
             <div className="p-3">
-              <label className="block text-sm font-medium leading-">Header title</label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset sm:max-w-md">
-                  <textarea
-                    type="text"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    placeholder=""
-                    value={templateData.sections.forWho.header.title}
-                    onChange={onInputChange} />
-                </div>
-              </div>
+              <Autocomplete
+                size="small"
+                disablePortal
+                value={selectedPageType}
+                id="combo-box-demo"
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                options={pageTypes}
+                sx={{ width: 300 }}
+                onChange={(event, value) => onPageTypeChange(value)}
+                renderInput={(params) => <TextField {...params} label="Page Type" />}
+              />
             </div>
 
             <div className="p-3">
-              <label className="block text-sm font-medium leading-">Header text</label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset sm:max-w-md">
-                  <textarea
-                    type="text"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    placeholder=""
-                    value={templateData.sections.forWho.header.text}
-                    onChange={onInputChange} />
-                </div>
-              </div>
+              <Autocomplete
+                size="small"
+                disablePortal
+                value={selectedTheme}
+                id="combo-box-demo"
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                options={themes}
+                sx={{ width: 300 }}
+                onChange={(event, value) => onThemeChange(value)}
+                renderInput={(params) => <TextField {...params} label="Theme" />}
+              />
             </div>
 
+            <div className="p-3">
+              <Autocomplete
+                size="small"
+                disablePortal
+                value={selectedLayout}
+                id="combo-box-demo"
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                options={layouts}
+                sx={{ width: 300 }}
+                onChange={(event, value) => onLayoutChange(value)}
+                renderInput={(params) => <TextField {...params} label="Layout" />}
+              />
+            </div>
 
             <div className="p-3">
-              <label className="block text-sm font-medium leading-">Boxes</label>
-              {templateData.sections.forWho.boxes.map((box, index) => {
-                return (
-                  <div className="m-2 p-3 rounded-md" key={index} style={{ border: 'solid 1px' }}>
-                    <div className="flex justify-between">
-                      <div>
-                        <span>Box {index}</span>
-                      </div>
-                      <div>
-                        <button
-                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full text-xs"
-                          onClick={() => deleteBox(index)}>
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                    <div className="mt-2">
-                      <div className="flex rounded-md shadow-sm ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset sm:max-w-md">
-                        <textarea
-                          type="text"
-                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                          placeholder=""
-                          value={box.title}
-                          onChange={onInputChange} />
-                      </div>
-                    </div>
+              <h4>Components</h4>
+              selectedPageComponents: {selectedPageComponents.length}
+              {
+                selectedPageComponents.map((pageComp, index) => {
+                  return (
+                    <div key={index} >
+                      <div className="flex justify-between">
+                        <div>
+                          <div>
+                            <span>{pageComp.id}</span>
+                          </div>
+                          <div>
+                            <span>{pageComp.label}</span>
+                          </div>
+                        </div>
 
-                    <div className="mt-2">
-                      <div className="flex rounded-md shadow-sm ring-1 ring-inset focus-within:ring-2 focus-within:ring-inset sm:max-w-md">
-                        <textarea
-                          type="text"
-                          className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                          placeholder=""
-                          value={box.text}
-                          onChange={onInputChange} />
+                        <div>
+                          <Button variant="text" onClick={(event) => removePageComponentFromPage(pageComp.id)}>
+                            <RemoveCircle />
+                          </Button>
+                        </div>
                       </div>
+                      <hr />
                     </div>
-                  </div>
-                );
-              })
+                  );
+                })
               }
+              <div className="flex items-center mt-4">
+                <div className="pr-1">
+                  <Autocomplete
+                    size="small"
+                    disablePortal
+                    value={selectedTempPageComponent}
+                    id="combo-box-demo"
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    options={pageComponents}
+                    sx={{ width: 300 }}
+                    onChange={(event, value) => onTempPageComponentChange(value)}
+                    renderInput={(params) => <TextField {...params} label="Page component" />}
+                  />
+                </div>
+                <div>
+                  <Button variant="outlined" onClick={addPageComponentToPage}>
+                    <Add />
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -161,6 +161,24 @@ export class GeneratorController {
         code: StatusCodes.INTERNAL_ERROR,
       });
     }
+
+  }
+ static async getPageComponentUrl(req: Request, res: Response) {
+    try {
+
+      const pageComponentId = +req.params.pageComponentId;
+      const url = await GeneratorRepository.getPageComponentUrl(pageComponentId);
+
+      HttpClientHelper.send<string>(res, {
+        payload: url,
+        code: StatusCodes.SUCCESS,
+      });
+    } catch (err) {
+      HttpClientHelper.send<void>(res, {
+        error: DEFINED_ERRORS.UNKNOWN_ERROR,
+        code: StatusCodes.INTERNAL_ERROR,
+      });
+    }
   }
 
 }

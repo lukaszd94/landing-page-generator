@@ -44,4 +44,92 @@ export const usePageComponentsStore = create((set) => ({
       selectedPageComponent: null
     }))
   },
+
+  generator: {
+    pageTypes: [],
+    themes: [],
+    layouts: [],
+    components: [],
+    selectedPageType: null,
+    selectedTheme: null,
+    selectedLayout: null,
+    selectedComponents: [],
+    selectedTempPageComponent: null
+  },
+  setSelectedPageType: (pageType) => set((state) => ({ generator: { ...state.generator, selectedPageType: pageType } })),
+  getPageTypes: async () => {
+    // const { data } = await axios.get(`http://localhost:8081/api/generator/page-components`);
+    // const pageComps = data.payload;
+
+    set((state) => ({
+      generator: {
+        ...state.generator,
+        pageTypes: [{
+          id: 1,
+          label: 'page type 1'
+        }]
+      }
+    }))
+  },
+  setSelectedTheme: (theme) => set((state) => ({ generator: { ...state.generator, selectedTheme: theme } })),
+  getThemes: async () => {
+    // const { data } = await axios.get(`http://localhost:8081/api/generator/page-components`);
+    // const pageComps = data.payload;
+
+    set((state) => ({
+      generator: {
+        ...state.generator,
+        themes: [{
+          id: 1,
+          label: 'theme 1'
+        }]
+      }
+    }))
+  },
+  setSelectedLayout: (layout) => set((state) => ({ generator: { ...state.generator, selectedLayout: layout } })),
+  getLayouts: async () => {
+    // const { data } = await axios.get(`http://localhost:8081/api/generator/page-components`);
+    // const pageComps = data.payload;
+
+    set((state) => ({
+      generator: {
+        ...state.generator,
+        layouts: [{
+          id: 1,
+          label: 'layout 1'
+        }]
+      }
+    }))
+  },
+  setSelectedTempPageComponent: (tempPageComponent) => set((state) => ({ generator: { ...state.generator, selectedTempPageComponent: tempPageComponent } })),
+  addTempPageComponentToPage: (tempPageComponent) => set((state) => ({
+    generator: {
+      ...state.generator,
+      selectedComponents: [
+        ...state.generator.selectedComponents,
+        tempPageComponent
+      ],
+      selectedTempPageComponent: null
+    }
+  })),
+  removeTempPageComponentToPage: (id) => set((state) => ({
+    generator: {
+      ...state.generator,
+      selectedComponents: state.generator.selectedComponents.filter(item => item.id !== id)
+    }
+  })),
+  getLayouts: async () => {
+    // const { data } = await axios.get(`http://localhost:8081/api/generator/page-components`);
+    // const pageComps = data.payload;
+
+    set((state) => ({
+      generator: {
+        ...state.generator,
+        layouts: [{
+          id: 1,
+          label: 'layout 1'
+        }]
+      }
+    }))
+  }
 }))
